@@ -1,9 +1,11 @@
 import { AuthCard } from "@/components/auth/AuthCard";
+import { Ionicons } from '@expo/vector-icons';
 import Entypo from '@expo/vector-icons/Entypo';
 import * as NavigationBar from 'expo-navigation-bar';
 import { router } from "expo-router";
 import React, { useEffect, useState } from 'react';
 import { Alert, Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { MaskedTextInput } from "react-native-mask-text";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Register() {
@@ -33,6 +35,9 @@ export default function Register() {
   const [numero, setNumero] = useState('');
   const [complemento, setComplemento] = useState('');
 
+
+  const [mostrarConfirmarSenha, setMostrarConfirmarSenha] = useState(false);
+
   function handleVoltar() {
     if (step === 1) {
       router.push("/(auth)/login");
@@ -59,6 +64,7 @@ export default function Register() {
     // aqui você junta tudo e chama sua API de cadastro
     console.log({ email, senha, telefone, dataNascimento, cpf, cep, endereco, numero, complemento });
   }
+
 
   return (
     <SafeAreaView style={styles.container}>
@@ -88,69 +94,100 @@ export default function Register() {
             />
 
             <Text style={{ marginTop: 22, marginBottom: 10 }}>Telefone</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="(11) 99999-9999"
-              value={telefone}
-              onChangeText={setTelefone}
-              keyboardType="phone-pad"
-              maxLength={15}
-            />
+           <MaskedTextInput
+            mask="(99) 99999-9999"
+            value={telefone}
+            onChangeText={setTelefone}
+            keyboardType="phone-pad"
+            style={styles.input}
+            placeholder="Digite seu telefone"
+          />
 
             <Text style={{ marginTop: 22, marginBottom: 10 }}>Senha</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Digite sua senha"
-              value={senha}
-              onChangeText={setSenha}
-              secureTextEntry={!mostrarSenha}
-              autoCapitalize="none"
-            />
+
+              <View style={styles.inputContainer}>
+                <TextInput
+                  style={styles.inputSenha}
+                  placeholder="Digite sua senha"
+                  value={senha}
+                  onChangeText={setSenha}
+                  secureTextEntry={!mostrarSenha}
+                  autoCapitalize="none"
+                />
+
+                <TouchableOpacity onPress={() => setMostrarSenha(!mostrarSenha)}>
+                  <Ionicons
+                    name={mostrarSenha ? "eye-off-outline" : "eye-outline"}
+                    size={24}
+                    color="#999"
+                  />
+                </TouchableOpacity>
+              </View>
 
             <Text style={{ marginTop: 22, marginBottom: 10 }}>Confirme a sua Senha</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Digite sua senha"
-              value={confirmarSenha}
-              onChangeText={setConfirmarSenha}
-              secureTextEntry={!mostrarSenha}
-              autoCapitalize="none"
-            />
+           <View style={styles.inputContainer}>
+              <TextInput
+                style={styles.inputSenha}
+                placeholder="Digite sua senha"
+                value={confirmarSenha}
+                onChangeText={setConfirmarSenha}
+                secureTextEntry={!mostrarConfirmarSenha}
+                autoCapitalize="none"
+              />
+
+              <TouchableOpacity
+                onPress={() =>
+                  setMostrarConfirmarSenha(!mostrarConfirmarSenha)
+                }>
+                <Ionicons
+                  name={mostrarConfirmarSenha ? "eye-off-outline" : "eye-outline"}
+                  size={24}
+                  color="#999"
+                />
+              </TouchableOpacity>
+            </View>
           </>
         )}
 
         {step === 2 && (
           <>
             <Text style={{ marginTop: 61, marginBottom: 10 }}>Data de Nascimento</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="DIA / MES / ANO"
-              value={dataNascimento}
-              onChangeText={setDataNascimento}
-            />
+         <MaskedTextInput
+            mask="99/99/9999"
+            value={dataNascimento}
+            onChangeText={setDataNascimento}
+            keyboardType="numeric"
+            style={styles.input}
+            placeholder="Digite sua data de nascimento"
+          />
 
             <Text style={{ marginTop: 22, marginBottom: 10 }}>CPF</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Digite seu CPF"
-              value={cpf}
-              onChangeText={setCpf}
-              keyboardType="numeric"
-              maxLength={11}
-            />
+           <MaskedTextInput
+                mask="999.999.999-99"
+                value={cpf}
+                onChangeText={(text, rawText) => {
+                  setCpf(text);
+
+                  console.log(text);    // 123.456.789-00
+                  console.log(rawText); // 12345678900
+                }}
+                keyboardType="numeric"
+                placeholder="Digite seu CPF"
+                style={styles.input}
+          />
           </>
         )}
 
         {step === 3 && (
           <>
             <Text style={{ marginTop: 61, marginBottom: 10 }}>CEP para entrega</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Digite seu CEP"
-              value={cep}
-              onChangeText={setCep}
-              keyboardType="numeric"
-              maxLength={9}
+            <MaskedTextInput
+                mask="99999-999"
+                value={cep}
+                onChangeText={setCep}
+                keyboardType="numeric"
+                style={styles.input}
+                placeholder="Digite seu CEP"
             />
 
             <Text style={{ marginTop: 22, marginBottom: 10 }}>Endereço / Logradouro</Text>
@@ -192,10 +229,22 @@ export default function Register() {
             <Text style={styles.buttonOutlineText}>Voltar</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.button} onPress={handleProximo}>
-            <Entypo name={step === 3 ? "check" : "chevron-right"} size={24} color="white" />
-            <Text style={styles.buttonText}>{step === 3 ? "Finalizar cadastro" : "Proximo"}</Text>
-          </TouchableOpacity>
+          <TouchableOpacity
+          style={[
+            styles.button,
+            { paddingHorizontal: step === 3 ? 10 : 40 }
+          ]}
+          onPress={handleProximo}
+        >
+          <Entypo
+            name={step === 3 ? "check" : "chevron-right"}
+            size={24}
+            color="white"
+          />
+          <Text style={styles.buttonText}>
+            {step === 3 ? "Finalizar cadastro" : "Próximo"}
+          </Text>
+        </TouchableOpacity>
 
         </View>
 
@@ -216,13 +265,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   image: {
-    marginTop: 52,
+    marginTop: 30,
     justifyContent: "center",
     alignItems: "center",
   },
   buttonText: {
     color: "#FFFFFF",
-    fontSize: 20,
+    fontSize: 16,
     fontWeight: 500 
   },
   buttonOutline: {
@@ -295,7 +344,6 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: "red",
     height: 52,
-    paddingHorizontal: 20, 
     borderRadius: 10,
     justifyContent: "center",
     alignItems: "center",
@@ -316,4 +364,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 12,
   },
+  inputContainer: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  borderWidth: 1,
+  borderColor: '#ccc',
+  borderRadius: 8,
+  paddingHorizontal: 12,
+},
+inputSenha: {
+  paddingVertical: 12,
+   flex: 1,
+  fontSize: 16,
+}
 });

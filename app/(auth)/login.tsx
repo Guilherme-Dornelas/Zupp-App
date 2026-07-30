@@ -1,12 +1,11 @@
 import { AuthCard } from "@/components/auth/AuthCard";
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign, Ionicons } from '@expo/vector-icons';
 import Entypo from '@expo/vector-icons/Entypo';
 import * as NavigationBar from 'expo-navigation-bar';
+import { router } from "expo-router";
 import React, { useEffect, useState } from 'react';
 import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from "react-native-safe-area-context";
-
-import { router } from "expo-router";
 
 export default function Login() {
 
@@ -45,35 +44,58 @@ export default function Login() {
 
           <Text style={{marginTop: 22, marginBottom: 10}}>Senha</Text>
 
-          <TextInput
-              style={styles.input}
-              placeholder="Digite sua senha"
-              value={senha}
-              onChangeText={setSenha}
-              secureTextEntry={!mostrarSenha}
-              autoCapitalize="none"
-            />
+          <View style={styles.inputContainer}>
+                <TextInput
+                  style={styles.inputSenha}
+                  placeholder="Digite sua senha"
+                  value={senha}
+                  onChangeText={setSenha}
+                  secureTextEntry={!mostrarSenha}
+                  autoCapitalize="none"
+                />
 
-          <TouchableOpacity 
-            style={styles.checkboxContainer} 
-            onPress={() => setAceitouTermos(!aceitouTermos)}
-            activeOpacity={0.7}
-          >
-            <View style={[styles.checkbox, aceitouTermos && styles.checkboxAtivo]}>
-              {aceitouTermos && <Text style={styles.check}>✓</Text>}
-            </View>
+                <TouchableOpacity onPress={() => setMostrarSenha(!mostrarSenha)}>
+                  <Ionicons
+                    name={mostrarSenha ? "eye-off-outline" : "eye-outline"}
+                    size={24}
+                    color="#999"
+                  />
+                </TouchableOpacity>
+              </View>
 
-            <Text style={styles.checkboxTexto}>
-              Concordo com os termos de{' '}
-              <Text style={styles.link} onPress={() => console.log('abrir política')}>
-                política
-              </Text>{' '}
-              e{' '}
-              <Text style={styles.link} onPress={() => console.log('abrir privacidade')}>
-                privacidade
+         <View style={styles.optionsContainer}>
+
+            <TouchableOpacity
+              style={styles.checkboxContainer}
+              onPress={() => setAceitouTermos(!aceitouTermos)}
+              activeOpacity={0.7}
+            >
+              <View
+                style={[
+                  styles.checkbox,
+                  aceitouTermos && styles.checkboxAtivo,
+                ]}
+              >
+                {aceitouTermos && (
+                  <Text style={styles.check}>✓</Text>
+                )}
+              </View>
+
+              <Text style={styles.checkboxTexto}>
+                Lembrar-me
               </Text>
-            </Text>
-          </TouchableOpacity>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={() => router.push("./VerifyCode")}
+              activeOpacity={0.7}
+            >
+              <Text style={styles.link}>
+                Esqueci minha senha
+              </Text>
+        </TouchableOpacity>
+
+      </View>
 
       <View style={styles.boxButton}>
 
@@ -82,6 +104,7 @@ export default function Login() {
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.buttonOutline}>
+            {/* <FontAwesome6 name="user" size={16} color="#FF521D" /> */}
             <Text style={styles.buttonOutlineText}>Entrar como visitante</Text>
           </TouchableOpacity>
       </View>
@@ -92,15 +115,27 @@ export default function Login() {
             <View style={styles.dividerLine} />
           </View>
 
-          <View style={styles.socialContainer}>
-            <TouchableOpacity onPress={() => console.log('login google')}>
-              <AntDesign name="google" size={32} color="#DB4437" />
-            </TouchableOpacity>
+         <View style={styles.socialContainer}>
+              <TouchableOpacity
+                style={styles.socialButton}
+                onPress={() => console.log("Login Google")}
+              >
+                <AntDesign name="google" size={24} color="#DB4437" />
+                <Text style={styles.socialButtonText}>
+                  Continuar com Google
+                </Text>
+              </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => console.log('login facebook')}>
-              <Entypo name="facebook" size={32} color="#1877F2" />
-            </TouchableOpacity>
-          </View>
+              <TouchableOpacity
+                style={styles.socialButton}
+                onPress={() => console.log("Login Facebook")}
+              >
+                <Entypo name="facebook" size={24} color="#1877F2" />
+                <Text style={styles.socialButtonText}>
+                  Continuar com Facebook
+                </Text>
+              </TouchableOpacity>
+            </View>
 
           <Text style={styles.cadastroTexto}>
             Ainda não cadastro?{' '}
@@ -145,6 +180,13 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 500 
   },
+  optionsContainer: {
+  width: "100%",
+  flexDirection: "row",
+  justifyContent: "space-between",
+  alignItems: "center",
+  marginTop: 16,
+},
   buttonOutline: {
     backgroundColor: "#FFFFFF",
     height: 52,
@@ -155,9 +197,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginTop: 14,
+    flexDirection: "row",
+    gap: 10
   },
   buttonOutlineText: {
-    color: "#000000",
+    color: "#A0A0A0",
     fontSize: 16,
     fontWeight: '600',
   },
@@ -171,7 +215,7 @@ const styles = StyleSheet.create({
   checkboxContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 16,
+    
   },
   checkbox: {
     width: 22,
@@ -218,11 +262,36 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   socialContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    gap: 24,
-    marginTop: 20,
+    width: "100%",
+  marginTop: 24,
+  gap: 16,
   },
+  socialButton: {
+  flexDirection: "row",
+  alignItems: "center",
+  justifyContent: "center",
+  backgroundColor: "#FFFFFF",
+  borderWidth: 1,
+  borderColor: "#E5E5E5",
+  borderRadius: 14,
+  height: 56,
+
+  shadowColor: "#000",
+  shadowOffset: {
+    width: 0,
+    height: 2,
+  },
+  shadowOpacity: 0.05,
+  shadowRadius: 6,
+  elevation: 2,
+},
+
+socialButtonText: {
+  marginLeft: 14,
+  fontSize: 16,
+  fontWeight: "600",
+  color: "#333333",
+},
   cadastroTexto: {
     marginTop: 24,
     marginBottom: 30,
@@ -238,5 +307,18 @@ const styles = StyleSheet.create({
     width: "100%",
     alignItems: "center",
     justifyContent: "center"
-  }
+  },
+  inputContainer: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  borderWidth: 1,
+  borderColor: '#ccc',
+  borderRadius: 8,
+  paddingHorizontal: 12,
+},
+inputSenha: {
+  paddingVertical: 12,
+   flex: 1,
+  fontSize: 16,
+}
 });
