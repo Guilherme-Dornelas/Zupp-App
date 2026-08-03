@@ -1,3 +1,5 @@
+import { borderRadius, colors, spacing } from "@/utils/theme";
+import { router } from "expo-router";
 import React, { useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { CodeField, Cursor, useBlurOnFulfill, useClearByFocusCell, } from "react-native-confirmation-code-field";
@@ -62,9 +64,18 @@ export default function VerifyCode() {
       </TouchableOpacity>
     </View>
 
+    <View style={styles.buttonsContainer}>
+
     <TouchableOpacity style={styles.button} onPress={() => console.log("Confirmar")}>
       <Text style={styles.buttonText}>Confirmar</Text>
     </TouchableOpacity>
+
+    <TouchableOpacity style={styles.buttonBack} onPress={() =>  router.navigate("/(auth)/login")}>
+      <Text style={styles.buttonTextBack}>Voltar</Text>
+    </TouchableOpacity>
+
+    </View>
+
      
     </SafeAreaView>
   );
@@ -75,15 +86,16 @@ export default function VerifyCode() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-    padding: 24,
+    backgroundColor: colors.white,
+    padding: spacing.lg,
+    paddingTop: 80,
     
   },
   cell: {
     width: 48,
     height: 56,
-    borderRadius: 10,
-    backgroundColor: "#F4F4F4",
+    borderRadius: borderRadius.md,
+    backgroundColor: colors.lightGray,
 
     justifyContent: "center",
     alignItems: "center",
@@ -93,8 +105,8 @@ const styles = StyleSheet.create({
   },
 
   focusCell: {
-    borderColor: "#FF521D",
-    backgroundColor: "#FFF",
+    borderColor: colors.primary,
+    backgroundColor: colors.whiteSoft,
   },
 
   cellText: {
@@ -108,7 +120,7 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 15,
-    color: "#666",
+    color: colors.gray,
     marginBottom: 20,
   },
   optionsContainer: {
@@ -116,16 +128,33 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 20,
   },
+  buttonsContainer: {
+  marginTop: "auto",
+  paddingBottom: 20,
+  gap: 15,
+},
   button: {
      marginTop: "auto",
-    marginBottom: 30, // distância da parte inferior
-    backgroundColor: "#FF521D",
+    backgroundColor: colors.primary,
+    paddingVertical: spacing.md,
+    borderRadius: borderRadius.lg,
+    alignItems: "center",
+  },
+  buttonBack: {
+     marginTop: "auto",
+    borderColor: colors.grayDark,
+    borderWidth: 1,
     paddingVertical: 16,
     borderRadius: 12,
     alignItems: "center",
   },
   buttonText: {
     color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  buttonTextBack: {
+    color: colors.grayDark,
     fontSize: 16,
     fontWeight: "bold",
   },

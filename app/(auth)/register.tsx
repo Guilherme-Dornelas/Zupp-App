@@ -1,4 +1,7 @@
 import { AuthCard } from "@/components/auth/AuthCard";
+import { buscarCep, ViaCepResponse } from "@/services/users";
+import { cleanNumber } from "@/utils/helpers";
+import { borderRadius, colors } from "@/utils/theme";
 import { Ionicons } from '@expo/vector-icons';
 import Entypo from '@expo/vector-icons/Entypo';
 import * as NavigationBar from 'expo-navigation-bar';
@@ -31,12 +34,14 @@ export default function Register() {
 
   // etapa 3
   const [cep, setCep] = useState('');
-  const [endereco, setEndereco] = useState('');
   const [numero, setNumero] = useState('');
   const [complemento, setComplemento] = useState('');
 
 
   const [mostrarConfirmarSenha, setMostrarConfirmarSenha] = useState(false);
+
+      const [endereco, setEndereco] = useState<ViaCepResponse | null>(null);
+
 
   function handleVoltar() {
     if (step === 1) {
@@ -64,6 +69,27 @@ export default function Register() {
     // aqui você junta tudo e chama sua API de cadastro
     console.log({ email, senha, telefone, dataNascimento, cpf, cep, endereco, numero, complemento });
   }
+
+
+const handleCep = async (text: string) => {
+  setCep(text);
+
+  const cepLimpo = cleanNumber(text);
+
+  if (cepLimpo.length !== 8) {
+    setEndereco(null);
+    return;
+  }
+
+  try {
+    const data = await buscarCep(cepLimpo);
+
+    setEndereco(data);
+  } catch (error) {
+    console.error("Erro ao buscar CEP:", error);
+    setEndereco(null);
+  }
+};
 
 
   return (
@@ -119,7 +145,7 @@ export default function Register() {
                   <Ionicons
                     name={mostrarSenha ? "eye-off-outline" : "eye-outline"}
                     size={24}
-                    color="#999"
+                    color={colors.grayMedium}
                   />
                 </TouchableOpacity>
               </View>
@@ -184,18 +210,19 @@ export default function Register() {
             <MaskedTextInput
                 mask="99999-999"
                 value={cep}
-                onChangeText={setCep}
+                onChangeText={handleCep}
                 keyboardType="numeric"
                 style={styles.input}
                 placeholder="Digite seu CEP"
+                
             />
 
             <Text style={{ marginTop: 22, marginBottom: 10 }}>Endereço / Logradouro</Text>
             <TextInput
               style={styles.input}
               placeholder="Digite seu endereço"
-              value={endereco}
-              onChangeText={setEndereco}
+              value={`${endereco?.logradouro},  ${endereco?.bairro}`}
+              editable={false}
             />
 
             <View style={styles.row}>
@@ -257,7 +284,7 @@ export default function Register() {
 const styles = StyleSheet.create({
   container: {
      flex: 1,
-     backgroundColor: "#FF521D",
+     backgroundColor: colors.primary,
      alignItems: "center"
   },
   scrollContent: {
@@ -270,29 +297,29 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   buttonText: {
-    color: "#FFFFFF",
+    color: colors.white,
     fontSize: 16,
     fontWeight: 500 
   },
   buttonOutline: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: colors.white,
     height: 52,
     width: 100,
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: '#A0A0A0',
+    borderColor: colors.grayDark,
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "row"
   },
   buttonOutlineText: {
-    color: "#A0A0A0",
+    color: colors.grayDark,
     fontSize: 16,
     fontWeight: '600',
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: colors.grayLight,
     borderRadius: 8,
     padding: 12,
     fontSize: 16,
@@ -327,7 +354,7 @@ const styles = StyleSheet.create({
     textAlign: "center"
   },
   cadastroLink: {
-    color: 'red',
+    color: colors.danger,
     fontWeight: '600',
   },
   boxButton: {
@@ -342,7 +369,7 @@ const styles = StyleSheet.create({
   },
 
   button: {
-    backgroundColor: "red",
+    backgroundColor: colors.danger,
     height: 52,
     borderRadius: 10,
     justifyContent: "center",
@@ -356,7 +383,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   stepIndicator: {
-    color: '#A0A0A0',
+    color: colors.grayDark,
     fontSize: 13,
     fontWeight: '600',
   },
@@ -368,8 +395,8 @@ const styles = StyleSheet.create({
   flexDirection: 'row',
   alignItems: 'center',
   borderWidth: 1,
-  borderColor: '#ccc',
-  borderRadius: 8,
+  borderColor: colors.grayLight,
+  borderRadius: borderRadius.sm,
   paddingHorizontal: 12,
 },
 inputSenha: {

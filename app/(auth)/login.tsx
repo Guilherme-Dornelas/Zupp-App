@@ -1,4 +1,5 @@
 import { AuthCard } from "@/components/auth/AuthCard";
+import { borderRadius, colors } from "@/utils/theme";
 import { AntDesign, Ionicons } from '@expo/vector-icons';
 import Entypo from '@expo/vector-icons/Entypo';
 import * as NavigationBar from 'expo-navigation-bar';
@@ -58,7 +59,7 @@ export default function Login() {
                   <Ionicons
                     name={mostrarSenha ? "eye-off-outline" : "eye-outline"}
                     size={24}
-                    color="#999"
+                    color={colors.grayMedium}
                   />
                 </TouchableOpacity>
               </View>
@@ -154,7 +155,7 @@ export default function Login() {
 const styles = StyleSheet.create({
   container: {
      flex: 1,
-     backgroundColor: "#FF521D",
+     backgroundColor: colors.primary,
      alignItems: "center"
   },
   scrollContent: {
@@ -167,7 +168,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   button:{
-     backgroundColor: "red",
+     backgroundColor: colors.danger,
      height: 52,
      width: 293,
      borderRadius: 10,
@@ -176,7 +177,7 @@ const styles = StyleSheet.create({
      marginTop: 40
   },
   buttonText: {
-    color: "#FFFFFF",
+    color: colors.white,
     fontSize: 20,
     fontWeight: 500 
   },
@@ -188,12 +189,12 @@ const styles = StyleSheet.create({
   marginTop: 16,
 },
   buttonOutline: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: colors.white,
     height: 52,
     width: 293,
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: colors.grayLight,
     justifyContent: "center",
     alignItems: "center",
     marginTop: 14,
@@ -201,14 +202,14 @@ const styles = StyleSheet.create({
     gap: 10
   },
   buttonOutlineText: {
-    color: "#A0A0A0",
+    color: colors.grayDark,
     fontSize: 16,
     fontWeight: '600',
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 8,
+    borderColor: colors.grayLight,
+    borderRadius: borderRadius.sm,
     padding: 12,
     fontSize: 16,
   },
@@ -222,23 +223,23 @@ const styles = StyleSheet.create({
     height: 22,
     borderRadius: 6,
     borderWidth: 1.5,
-    borderColor: '#ccc',
+    borderColor: colors.grayLight,
     marginRight: 10,
     alignItems: 'center',
     justifyContent: 'center',
   },
   checkboxAtivo: {
-    backgroundColor: '#2196F3',
-    borderColor: '#2196F3',
+    backgroundColor: colors.blue,
+    borderColor: colors.blue,
   },
   check: {
-    color: '#fff',
+    color: colors.white,
     fontSize: 14,
     fontWeight: 'bold',
   },
   checkboxTexto: {
     fontSize: 13,
-    color: '#999',
+    color: colors.grayMedium,
     flexShrink: 1,
   },
   link: {
@@ -254,7 +255,7 @@ const styles = StyleSheet.create({
   dividerLine: {
     flex: 1,
     height: 1,
-    backgroundColor: '#ccc',
+    backgroundColor: colors.grayLight,
   },
   dividerText: {
     marginHorizontal: 12,
@@ -312,8 +313,8 @@ socialButtonText: {
   flexDirection: 'row',
   alignItems: 'center',
   borderWidth: 1,
-  borderColor: '#ccc',
-  borderRadius: 8,
+  borderColor: colors.grayLight,
+  borderRadius: borderRadius.sm,
   paddingHorizontal: 12,
 },
 inputSenha: {
