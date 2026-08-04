@@ -100,7 +100,7 @@ export default function Login() {
 
       <View style={styles.boxButton}>
 
-          <TouchableOpacity  style={styles.button}>
+          <TouchableOpacity  style={styles.button} onPress={() => router.push("/(tabs)")}>
             <Text style={styles.buttonText}>Entrar</Text>
           </TouchableOpacity>
 
