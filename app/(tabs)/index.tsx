@@ -1,11 +1,14 @@
+import { AddressSelectionContent, ReusableModal } from '@/components/Modal';
 import Entypo from '@expo/vector-icons/Entypo';
 import Feather from '@expo/vector-icons/Feather';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { router } from 'expo-router';
-import { Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { useState } from 'react';
+import { Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, useWindowDimensions, View } from 'react-native';
 import { SafeAreaView } from "react-native-safe-area-context";
+import { Button } from '@/components/ui';
 
 const categories = [
   { id: '1', name: 'Hambúrguer', image: 'https://via.placeholder.com/64' },
@@ -15,13 +18,20 @@ const categories = [
 ];
 
 export default function HomeScreen() {
+  const [locationModalVisible, setLocationModalVisible] = useState(false);
+  const { height: screenHeight } = useWindowDimensions();
+  const modalHeight = screenHeight * 0.6;
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
 
         <View style={styles.header}>
-          <View style={styles.containerLocation}>
-
+          <TouchableOpacity
+            style={styles.containerLocation}
+            activeOpacity={0.8}
+            onPress={() => setLocationModalVisible(true)}
+          >
             <View style={styles.iconContainer}>
               <FontAwesome6 name="location-dot" size={18} color="#FF5A1F" />
             </View>
@@ -34,8 +44,7 @@ export default function HomeScreen() {
                 <Entypo name="chevron-small-down" size={22} color="#222" />
               </View>
             </View>
-
-          </View>
+          </TouchableOpacity>
 
           <TouchableOpacity
             style={styles.bellContainer}
@@ -87,13 +96,15 @@ export default function HomeScreen() {
             <Text style={styles.bannerTitle}>Combo Duplo</Text>
             <Text style={styles.bannerDiscount}>com 30% OFF</Text>
 
-            <TouchableOpacity
-              style={styles.bannerButton}
-              onPress={() => console.log('pedir agora pressed')}
-            >
-              <Text style={styles.bannerButtonText}>Pedir agora</Text>
-              <Feather name="arrow-right" size={16} color="#1D1D1D" />
-            </TouchableOpacity>
+            <View style={styles.bannerButton}>
+              <Button
+                title="Pedir agora"
+                onPress={() => console.log('pedir agora pressed')}
+                variant="ghost"
+                style={{ paddingHorizontal: 12, paddingVertical: 8, borderRadius: 24 }}
+              />
+              <Feather name="arrow-right" size={16} color="#1D1D1D" style={{ marginLeft: 8 }} />
+            </View>
           </View>
         </TouchableOpacity>
 
@@ -157,6 +168,18 @@ export default function HomeScreen() {
 
       </ScrollView>
 
+      <ReusableModal
+        visible={locationModalVisible}
+        onClose={() => setLocationModalVisible(false)}
+        title="Endereço de entrega"
+        size="large"
+        containerStyle={{ height: modalHeight }}
+      >
+        <AddressSelectionContent
+          initialSelectedId="home"
+          onSelectAddress={(item) => console.log('selecionado:', item)}
+        />
+      </ReusableModal>
     </SafeAreaView>
   );
 }
@@ -451,6 +474,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
   },
+
 
   restaurantRatingRow: {
     flexDirection: "row",
