@@ -1,4 +1,5 @@
 import { AddressSelectionContent, ReusableModal } from '@/components/Modal';
+import { Button } from '@/components/ui';
 import Entypo from '@expo/vector-icons/Entypo';
 import Feather from '@expo/vector-icons/Feather';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
@@ -8,7 +9,6 @@ import { router } from 'expo-router';
 import { useState } from 'react';
 import { Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, useWindowDimensions, View } from 'react-native';
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Button } from '@/components/ui';
 
 const categories = [
   { id: '1', name: 'Hambúrguer', image: 'https://via.placeholder.com/64' },
@@ -178,6 +178,7 @@ export default function HomeScreen() {
         <AddressSelectionContent
           initialSelectedId="home"
           onSelectAddress={(item) => console.log('selecionado:', item)}
+          onAddAddress={() => router.push('/(auth)/address')}
         />
       </ReusableModal>
     </SafeAreaView>
